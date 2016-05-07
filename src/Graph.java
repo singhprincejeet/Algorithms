@@ -67,16 +67,17 @@ public class Graph {
 
     private static void shortestPath(Vertex a, HashMap<Vertex, LinkedList<Edge>> adjacentVertices) {
         LinkedList<Vertex> toVisit = new LinkedList<>();
-        HashMap<Vertex, Vertex> previous = new HashMap<>(6);
-        HashMap<Vertex, Float> distance = new HashMap<>(6);
+        HashMap<Vertex, Vertex> previous = new HashMap<>(adjacentVertices.size());
+        HashMap<Vertex, LinkedList<Vertex>> path = new HashMap<>(adjacentVertices.size());
+        HashMap<Vertex, Float> distance = new HashMap<>(adjacentVertices.size());
         for (Vertex vertex : adjacentVertices.keySet()){
             distance.put(vertex,Float.POSITIVE_INFINITY);
             previous.put(vertex, null);
+            path.put(vertex,new LinkedList<>());
             toVisit.add(vertex);
         }
         distance.put(a,new Float(0));
-        int count = 0;
-        while (count < adjacentVertices.size()){
+        for (int i = 0; i < adjacentVertices.size(); i++) {
             Vertex v = new Vertex("");
             Float minValue = Float.POSITIVE_INFINITY;
             for (Vertex vertex : toVisit){
@@ -93,8 +94,21 @@ public class Graph {
                     previous.put(edge.getEndingVertex(),v);
                 }
             }
-            count++;
         }
         System.out.println(previous);
+        for (Vertex vertex : adjacentVertices.keySet()){
+            toVisit.add(vertex);
+        }
+        for (int i = 1; i < adjacentVertices.size(); i++) {
+            Vertex v = (Vertex) adjacentVertices.keySet().toArray()[i];
+            Vertex temp = v;
+            while (temp != (Vertex) adjacentVertices.keySet().toArray()[0]){
+                Vertex v2 = previous.get(temp);
+                path.get(v).addFirst(v2);
+                temp = v2;
+            }
+        }
+        
+        System.out.println(path);
     }
 }
